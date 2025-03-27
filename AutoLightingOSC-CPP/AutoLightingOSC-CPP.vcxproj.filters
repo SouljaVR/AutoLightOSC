@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="AutoLightHeaders">
+      <UniqueIdentifier>{617ff097-afd6-4ad0-9025-6e4027429f8d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AutoLightingOSC-CPP.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutDX\SpoutCommon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutDX\SpoutCopy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutDX\SpoutDirectX.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutDX\SpoutDX.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutDX\SpoutFrameCount.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutDX\SpoutSenderNames.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutDX\SpoutSharedMemory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutDX\SpoutUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutLibrary\SpoutLibrary.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutDX9\SpoutCommon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutDX9\SpoutDX9.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutDX9\SpoutFrameCount.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutDX9\SpoutSenderNames.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutDX9\SpoutSharedMemory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutDX9\SpoutUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutDX12\SpoutCommon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutDX12\SpoutCopy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutDX12\SpoutDirectX.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutDX12\SpoutDX.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutDX12\SpoutDX12.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutDX12\SpoutFrameCount.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutDX12\SpoutSenderNames.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutDX12\SpoutSharedMemory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutDX12\SpoutUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutGL\Spout.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutGL\SpoutCommon.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutGL\SpoutCopy.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutGL\SpoutDirectX.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutGL\SpoutFrameCount.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutGL\SpoutGL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutGL\SpoutGLextensions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutGL\SpoutReceiver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutGL\SpoutSender.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutGL\SpoutSenderNames.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutGL\SpoutSharedMemory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Spout2\Libs\include\SpoutGL\SpoutUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OscManager.h">
+      <Filter>AutoLightHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Resource.h">
+      <Filter>AutoLightHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="WindowManager.h">
+      <Filter>AutoLightHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="UserSettings.h">
+      <Filter>AutoLightHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="SpoutReceiver.h">
+      <Filter>AutoLightHeaders</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorProcessor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ScreenCapture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UserSettings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="WindowManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OscManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SpoutReceiver.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ColorProcessor.h">
+      <Filter>AutoLightHeaders</Filter>
+    </ClCompile>
+    <ClCompile Include="ScreenCapture.h">
+      <Filter>AutoLightHeaders</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="AutoLightingOSC-CPP.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="small.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="AutoLightingOSC-CPP.ico">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+</Project>
