@@ -54,87 +54,6 @@
     <ClInclude Include="Spout2\Libs\include\SpoutLibrary\SpoutLibrary.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Spout2\Libs\include\SpoutDX9\SpoutCommon.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spout2\Libs\include\SpoutDX9\SpoutDX9.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spout2\Libs\include\SpoutDX9\SpoutFrameCount.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spout2\Libs\include\SpoutDX9\SpoutSenderNames.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spout2\Libs\include\SpoutDX9\SpoutSharedMemory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spout2\Libs\include\SpoutDX9\SpoutUtils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spout2\Libs\include\SpoutDX12\SpoutCommon.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spout2\Libs\include\SpoutDX12\SpoutCopy.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spout2\Libs\include\SpoutDX12\SpoutDirectX.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spout2\Libs\include\SpoutDX12\SpoutDX.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spout2\Libs\include\SpoutDX12\SpoutDX12.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spout2\Libs\include\SpoutDX12\SpoutFrameCount.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spout2\Libs\include\SpoutDX12\SpoutSenderNames.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spout2\Libs\include\SpoutDX12\SpoutSharedMemory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spout2\Libs\include\SpoutDX12\SpoutUtils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spout2\Libs\include\SpoutGL\Spout.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spout2\Libs\include\SpoutGL\SpoutCommon.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spout2\Libs\include\SpoutGL\SpoutCopy.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spout2\Libs\include\SpoutGL\SpoutDirectX.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spout2\Libs\include\SpoutGL\SpoutFrameCount.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spout2\Libs\include\SpoutGL\SpoutGL.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spout2\Libs\include\SpoutGL\SpoutGLextensions.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spout2\Libs\include\SpoutGL\SpoutReceiver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spout2\Libs\include\SpoutGL\SpoutSender.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spout2\Libs\include\SpoutGL\SpoutSenderNames.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spout2\Libs\include\SpoutGL\SpoutSharedMemory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Spout2\Libs\include\SpoutGL\SpoutUtils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="OscManager.h">
       <Filter>AutoLightHeaders</Filter>
     </ClInclude>
@@ -149,6 +68,9 @@
     </ClInclude>
     <ClInclude Include="SpoutReceiver.h">
       <Filter>AutoLightHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image\include\stb_image.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -186,10 +108,10 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="small.ico">
+    <Image Include="resources\autolight_icon.ico">
       <Filter>Resource Files</Filter>
     </Image>
-    <Image Include="AutoLightingOSC-CPP.ico">
+    <Image Include="resources\logo.png">
       <Filter>Resource Files</Filter>
     </Image>
   </ItemGroup>

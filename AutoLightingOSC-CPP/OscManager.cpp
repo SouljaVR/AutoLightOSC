@@ -28,6 +28,7 @@
 
 OscManager::OscManager(const std::string& ipAddress, int port)
     : ipAddress(ipAddress), port(port), oscRate(0),
+    rParameter("AL_Red"), gParameter("AL_Green"), bParameter("AL_Blue"),
     lastMessageTime(std::chrono::steady_clock::now()) {
     Initialize();
 }
@@ -50,6 +51,21 @@ void OscManager::Initialize() {
 
 void OscManager::SetOscRate(int rate) {
     oscRate = rate;
+}
+
+void OscManager::SetOscPort(int newPort) {
+    if (port != newPort) {
+        port = newPort;
+        // Reinitialize with new port
+        socket.reset();
+        Initialize();
+    }
+}
+
+void OscManager::SetParameters(const std::string& r, const std::string& g, const std::string& b) {
+    rParameter = r;
+    gParameter = g;
+    bParameter = b;
 }
 
 void OscManager::SendColorValues(float r, float g, float b) {
@@ -83,17 +99,21 @@ void OscManager::SendColorValues(float r, float g, float b) {
         char buffer[OSC_BUFFER_SIZE];
         osc::OutboundPacketStream p(buffer, OSC_BUFFER_SIZE);
 
-        p << osc::BeginMessage("/avatar/parameters/RTSS_Hex_R") << rMapped << osc::EndMessage;
+        // Use the configurable parameter names
+        std::string rPath = "/avatar/parameters/" + rParameter;
+        std::string gPath = "/avatar/parameters/" + gParameter;
+        std::string bPath = "/avatar/parameters/" + bParameter;
+
+        p << osc::BeginMessage(rPath.c_str()) << rMapped << osc::EndMessage;
         socket->Send(p.Data(), p.Size());
         p.Clear();
 
-        p << osc::BeginMessage("/avatar/parameters/RTSS_Hex_G") << gMapped << osc::EndMessage;
+        p << osc::BeginMessage(gPath.c_str()) << gMapped << osc::EndMessage;
         socket->Send(p.Data(), p.Size());
         p.Clear();
 
-        p << osc::BeginMessage("/avatar/parameters/RTSS_Hex_B") << bMapped << osc::EndMessage;
+        p << osc::BeginMessage(bPath.c_str()) << bMapped << osc::EndMessage;
         socket->Send(p.Data(), p.Size());
-
     }
     catch (const std::exception& e) {
         std::cerr << "Error sending OSC message: " << e.what() << std::endl;

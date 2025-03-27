@@ -13,11 +13,15 @@ public:
     int saturationValue = 0;
     bool forceMaxBrightness = true;
     bool enableSmoothing = true;
-    float smoothingRateValue = 0.5f;
+    float smoothingRateValue = 0.0f;
     bool showDebugView = false;
-    int oscRate = 5;
+    int oscRate = 3;
     bool keepTargetWindowOnTop = false;
     bool enableSpout = false;
+    int oscPort = 9000;
+    std::string oscRParameter = "AL_Red";
+    std::string oscGParameter = "AL_Green";
+    std::string oscBParameter = "AL_Blue";
 
     UserSettings();
 

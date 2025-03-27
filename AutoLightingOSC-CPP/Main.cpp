@@ -101,16 +101,23 @@ struct AppState {
     bool showAboutWindow = false;
     ID3D11ShaderResourceView* logoTexture = nullptr;
 
-    // Add version information
+    // Links
     const char* appVersion = "1.0.5";
     const char* gitHubUrl = "https://github.com/SouljaVR/AutoLightingOSC";
     const char* websiteUrl = "https://www.soulja.io";
+    const char* paypalUrl = "https://www.paypal.com/paypalme/souljaindustries";
+    const char* kofiUrl = "https://ko-fi.com/bigsoulja";
 
     AppState() {
         windowManager = std::make_unique<WindowManager>();
         screenCapture = std::make_unique<ScreenCapture>();
         colorProcessor = std::make_unique<ColorProcessor>(settings);
-        oscManager = std::make_unique<OscManager>("127.0.0.1", 9000);
+        oscManager = std::make_unique<OscManager>("127.0.0.1", settings.oscPort);
+        oscManager->SetParameters(
+            settings.oscRParameter,
+            settings.oscGParameter,
+            settings.oscBParameter
+        );
         spoutReceiver = std::make_unique<SpoutReceiver>();
 
         settings = UserSettings::Load();
@@ -505,27 +512,27 @@ struct AppState {
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
 {
     // Enable console window for debug logs
-    AllocConsole();
-    FILE* fp;
-    freopen_s(&fp, "CONOUT$", "w", stdout);
-    freopen_s(&fp, "CONOUT$", "w", stderr);
-    freopen_s(&fp, "CONIN$", "r", stdin);
-    std::cout.clear();
-    std::cerr.clear();
-    std::cin.clear();
-    std::wcout.clear();
-    std::wcerr.clear();
-    std::wcin.clear();
+    //AllocConsole();
+    //FILE* fp;
+    //freopen_s(&fp, "CONOUT$", "w", stdout);
+    //freopen_s(&fp, "CONOUT$", "w", stderr);
+    //freopen_s(&fp, "CONIN$", "r", stdin);
+    //std::cout.clear();
+    //std::cerr.clear();
+    //std::cin.clear();
+    //std::wcout.clear();
+    //std::wcerr.clear();
+    //std::wcin.clear();
 
     // Create application window
     WNDCLASSEX wc = { sizeof(WNDCLASSEX), CS_CLASSDC, WndProc, 0L, 0L, GetModuleHandle(nullptr),
         LoadIcon(wc.hInstance, MAKEINTRESOURCE(IDI_AUTOLIGHTINGOSCCPP)),
         LoadCursor(nullptr, IDC_ARROW),
         nullptr, nullptr,
-        _T("AutoLightOSC"),
+        _T("AutoLightOSC - By BigSoulja"),
         LoadIcon(wc.hInstance, MAKEINTRESOURCE(IDI_SMALL)) };
     ::RegisterClassEx(&wc);
-    HWND hwnd = ::CreateWindow(wc.lpszClassName, _T("AutoLightOSC"), WS_OVERLAPPEDWINDOW & ~WS_SIZEBOX, 100, 100, 483, 327, nullptr, nullptr, wc.hInstance, nullptr);
+    HWND hwnd = ::CreateWindow(wc.lpszClassName, _T("AutoLightOSC - By BigSoulja"), WS_OVERLAPPEDWINDOW & ~WS_SIZEBOX, 100, 100, 483, 327, nullptr, nullptr, wc.hInstance, nullptr);
 
     // Initialize Direct3D
     if (!CreateDeviceD3D(hwnd))
@@ -584,10 +591,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
     int logoWidth, logoHeight;
     if (LoadTextureFromFile("resources/logo.png", &appState->logoTexture, logoWidth, logoHeight)) {
-        std::cout << "Logo loaded successfully" << std::endl;
-    }
-    else {
-        std::cerr << "Failed to load logo" << std::endl;
     }
 
     // Set window size based on debug view
@@ -1166,6 +1169,134 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
                 ImGui::EndGroup();
 
+                // New group for OSC settings
+                ImGui::SameLine(250);
+                ImGui::SetCursorPosY(50);
+                ImGui::BeginGroup();
+
+                // OSC Port field with label
+                ImGui::AlignTextToFramePadding();
+                ImGui::Text("OSC Sender Port:");
+                ImGui::SameLine();
+                ImGui::PushItemWidth(116);
+                char oscPortBuf[16];
+                sprintf_s(oscPortBuf, "%d", appState->settings.oscPort);
+                ImGui::SetCursorPosY(50);
+                if (appState->isCapturing) {
+                    ImGui::BeginDisabled();
+                }
+                if (ImGui::InputText("##oscport", oscPortBuf, IM_ARRAYSIZE(oscPortBuf), ImGuiInputTextFlags_CharsDecimal)) {
+                    // Convert to int and validate
+                    int newPort = atoi(oscPortBuf);
+                    if (newPort >= 1024 && newPort <= 65535) { // Valid port range
+                        appState->settings.oscPort = newPort;
+                        if (appState->oscManager) {
+                            appState->oscManager->SetOscPort(newPort);
+                        }
+                        appState->SaveSettings();
+                    }
+                }
+                if (appState->isCapturing) {
+                    ImGui::EndDisabled();
+                }
+                ImGui::PopItemWidth();
+
+                ImGui::Spacing();
+                ImGui::Spacing();
+                ImGui::Separator();
+                ImGui::Spacing();
+                ImGui::Spacing();
+
+                // R Parameter
+                ImGui::AlignTextToFramePadding();
+                ImGui::Text("R Value Parameter:");
+                ImGui::SameLine();
+                ImGui::PushItemWidth(100);
+                char rParamBuf[64];
+                strcpy_s(rParamBuf, appState->settings.oscRParameter.c_str());
+                if (appState->isCapturing) {
+                    ImGui::BeginDisabled();
+                }
+                if (ImGui::InputText("##rParam", rParamBuf, IM_ARRAYSIZE(rParamBuf), ImGuiInputTextFlags_CharsNoBlank)) {
+                    // Simple validation: ensure not empty and no special characters
+                    std::string newParam = rParamBuf;
+                    if (!newParam.empty()) {
+                        appState->settings.oscRParameter = newParam;
+                        if (appState->oscManager) {
+                            appState->oscManager->SetParameters(
+                                appState->settings.oscRParameter,
+                                appState->settings.oscGParameter,
+                                appState->settings.oscBParameter
+                            );
+                        }
+                        appState->SaveSettings();
+                    }
+                }
+                if (appState->isCapturing) {
+                    ImGui::EndDisabled();
+                }
+                ImGui::PopItemWidth();
+
+                // G Parameter
+                ImGui::AlignTextToFramePadding();
+                ImGui::Text("G Value Parameter:");
+                ImGui::SameLine();
+                ImGui::PushItemWidth(100);
+                char gParamBuf[64];
+                strcpy_s(gParamBuf, appState->settings.oscGParameter.c_str());
+                if (appState->isCapturing) {
+                    ImGui::BeginDisabled();
+                }
+                if (ImGui::InputText("##gParam", gParamBuf, IM_ARRAYSIZE(gParamBuf), ImGuiInputTextFlags_CharsNoBlank)) {
+                    std::string newParam = gParamBuf;
+                    if (!newParam.empty()) {
+                        appState->settings.oscGParameter = newParam;
+                        if (appState->oscManager) {
+                            appState->oscManager->SetParameters(
+                                appState->settings.oscRParameter,
+                                appState->settings.oscGParameter,
+                                appState->settings.oscBParameter
+                            );
+                        }
+                        appState->SaveSettings();
+                    }
+                }
+                if (appState->isCapturing) {
+                    ImGui::EndDisabled();
+                }
+                ImGui::PopItemWidth();
+
+                // B Parameter
+                ImGui::AlignTextToFramePadding();
+                ImGui::Text("B Value Parameter:");
+                ImGui::SameLine();
+                ImGui::PushItemWidth(100);
+                char bParamBuf[64];
+                strcpy_s(bParamBuf, appState->settings.oscBParameter.c_str());
+                if (appState->isCapturing) {
+                    ImGui::BeginDisabled();
+                }
+                if (ImGui::InputText("##bParam", bParamBuf, IM_ARRAYSIZE(bParamBuf), ImGuiInputTextFlags_CharsNoBlank)) {
+                    std::string newParam = bParamBuf;
+                    if (!newParam.empty()) {
+                        appState->settings.oscBParameter = newParam;
+                        if (appState->oscManager) {
+                            appState->oscManager->SetParameters(
+                                appState->settings.oscRParameter,
+                                appState->settings.oscGParameter,
+                                appState->settings.oscBParameter
+                            );
+                        }
+                        appState->SaveSettings();
+                    }
+                }
+                if (appState->isCapturing) {
+                    ImGui::EndDisabled();
+                }
+                ImGui::PopItemWidth();
+
+                ImGui::EndGroup();
+
                 // Preview image with proper aspect ratio
                 ImGui::BeginGroup();
 
@@ -1373,6 +1504,16 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
                 ImGui::SameLine();
                 if (ImGui::SmallButton("Website")) {
                     ShellExecuteA(NULL, "open", appState->websiteUrl, NULL, NULL, SW_SHOWNORMAL);
+                }
+
+                ImGui::SameLine();
+                if (ImGui::SmallButton("PayPal")) {
+                    ShellExecuteA(NULL, "open", appState->paypalUrl, NULL, NULL, SW_SHOWNORMAL);
+                }
+
+                ImGui::SameLine();
+                if (ImGui::SmallButton("Ko-Fi")) {
+                    ShellExecuteA(NULL, "open", appState->kofiUrl, NULL, NULL, SW_SHOWNORMAL);
                 }
 
                 ImGui::Spacing();

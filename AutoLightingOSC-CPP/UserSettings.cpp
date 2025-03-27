@@ -68,6 +68,10 @@ UserSettings UserSettings::Load() {
                 if (j.contains("oscRate")) settings.oscRate = j["oscRate"];
                 if (j.contains("keepTargetWindowOnTop")) settings.keepTargetWindowOnTop = j["keepTargetWindowOnTop"];
                 if (j.contains("enableSpout")) settings.enableSpout = j["enableSpout"];
+                if (j.contains("oscPort")) settings.oscPort = j["oscPort"];
+                if (j.contains("oscRParameter")) settings.oscRParameter = j["oscRParameter"];
+                if (j.contains("oscGParameter")) settings.oscGParameter = j["oscGParameter"];
+                if (j.contains("oscBParameter")) settings.oscBParameter = j["oscBParameter"];
 
                 file.close();
             }
@@ -101,6 +105,10 @@ void UserSettings::Save() const {
         j["oscRate"] = oscRate;
         j["keepTargetWindowOnTop"] = keepTargetWindowOnTop;
         j["enableSpout"] = enableSpout;
+        j["oscPort"] = oscPort;
+        j["oscRParameter"] = oscRParameter;
+        j["oscGParameter"] = oscGParameter;
+        j["oscBParameter"] = oscBParameter;
 
         // Write to file
         std::ofstream file(settingsFile);

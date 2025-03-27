@@ -362,5 +362,5 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-/Spout2/
-/stb_image/
+/AutoLightingOSC-CPP/Spout2/
+/AutoLightingOSC-CPP/stb_image/
