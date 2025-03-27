@@ -781,7 +781,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
             ImGui::Text("FPS:");
             ImGui::SameLine();
 
-            ImGui::PushItemWidth(100);
+            ImGui::PushItemWidth(90);
             int fps = appState->settings.captureFps;
             if (ImGui::InputInt("##fps", &fps, 1, 5)) {
                 if (fps < 1) fps = 1;
@@ -928,7 +928,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
             // Color preview panel
             ImGui::SameLine();
-            ImGui::SetCursorPosX(210);
+            ImGui::SetCursorPosX(215);
             ImGui::SetCursorPosY(90);
 
             // Create a colored rectangle
@@ -940,7 +940,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
             );
 
             ImVec2 colorPanelPos = ImGui::GetCursorScreenPos();
-            ImVec2 colorPanelSize(330, 200);
+            ImVec2 colorPanelSize(315, 200);
             ImGui::GetWindowDrawList()->AddRectFilled(
                 colorPanelPos,
                 ImVec2(colorPanelPos.x + colorPanelSize.x, colorPanelPos.y + colorPanelSize.y),
@@ -950,16 +950,16 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
             ImGui::Dummy(colorPanelSize);
 
-            ImGui::SetCursorPosX(350);
+            ImGui::SetCursorPosX(330);
             ImGui::SetCursorPosY(300);
             if (ImGui::Button("About", ImVec2(90, 50))) {
                 appState->showAboutWindow = true;
             }
 
             // Debug View toggle button
-            ImGui::SetCursorPosX(450);
+            ImGui::SetCursorPosX(430);
             ImGui::SetCursorPosY(300);
-            if (ImGui::Button(appState->isDebugViewExpanded ? "Hide Debug" : "Show Debug", ImVec2(90, 50))) {
+            if (ImGui::Button(appState->isDebugViewExpanded ? "Hide Options" : "Show Options", ImVec2(100, 50))) {
                 appState->isDebugViewExpanded = !appState->isDebugViewExpanded;
                 appState->settings.showDebugView = appState->isDebugViewExpanded;
 
