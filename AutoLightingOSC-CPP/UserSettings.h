@@ -13,7 +13,7 @@ public:
     int saturationValue = 0;
     bool forceMaxBrightness = true;
     bool enableSmoothing = true;
-    float smoothingRateValue = 0.0f;
+    float smoothingRateValue = 0.5f;
     bool showDebugView = false;
     int oscRate = 3;
     bool keepTargetWindowOnTop = false;
