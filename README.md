@@ -118,3 +118,5 @@ This project is open source, but continued development and maintenance benefit f
 - Ko-Fi: https://ko-fi.com/bigsoulja
 
 Support via funding, sponsoring, or integration opportunities is welcome. Ya boy need to eat.
+
+Don't forget to leave a ⭐ if this helped you in any way! Thank you.
