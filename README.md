@@ -45,7 +45,7 @@ AutoLightOSC is a Windows application that captures screen colors and sends them
 - **OSC Rate:** How many OSC messages to send per second (1-240).
 - **FPS:** Screen capture rate (1-60) - Recommended is something really low like 5fps, but if you want the lighting to be low latency you can put it higher. *VRChat floats update at around 10hz so there isnt much benefit going over 5fps + smoothing.*
 - **Use Spout2:** Enable to receive frames from Spout2 senders instead of screen capture.
-- **White Mix:** Blend the captured color with white (0-100%) - basically the same as lowering saturation, this setting is pretty redundant but I left it there anyway in case it has a usecase I havent thought of lol.
+- **White Mix:** Blend the captured color with white (0-100%). Can be used in tandem with positive saturation for more reliable colours without being heavily-saturated overall.
 - **Saturation Boost:** Adjust color saturation (-100% to +100%).
 - **Force Max Brightness:** Always use the brightest possible version of the current color, recommended to keep this on if you want your avatar to have the highest influence possible by this system.
 - **Enable Smoothing:** Smooth color transitions, recommended to keep on so the colour changes are gradual on the avatar. If you use avatar parameter smoothing for the feature you are controlling with this, this is not needed. Smoothing is fixed to 60fps, independent of the capture FPS, and it influences the OSC output rate. Keep this in mind and ensure the OSC rate is set to something sensible so you arent overloading VRChat with a crazy high send rate. 3 parameters send each poll, so the rate is 3x whatever it says. E.g an OSC rate of 3 is 9 messages per second. 
