@@ -24,7 +24,7 @@ AutoLightOSC is a Windows application that captures screen colors and sends them
 - Windows 10/11
 - DirectX 11 capable GPU (If you can play VRChat you are probably fine)
 - VRChat with OSC enabled
-- Unity/Avatar Creation/OSC integration competence, I do not provide a prefab for this.
+- Unity/Avatar Creation/OSC integration competence, I do not provide a prefab for this. However there is a demo avatar available.
 
 ## Installation
 
@@ -63,6 +63,8 @@ Click "Show Options" to access:
 
 ## Avatar Setup
 
+![image](https://github.com/SouljaVR/AutoLightOSC/blob/master/demo2.gif?raw=true)
+
 For your VRChat avatar to respond to AutoLightOSC, it needs to:
 
 1. Have 3 float parameters, each float representing each colour channel. You can use any parameter names, its customizable.
@@ -76,7 +78,11 @@ AL_Green: -1.0
 AL_Blue: -1.0
 ```
 
-I do not provide a prefab for this. It is up to you to utilize the values, avatar/unity competence is needed. An example usecase would be animating the colour property of a shader. You can individually keyframe the R-G-B values as the keyframes are generally split in most shaders. If they arent, you can mix keyframes using a blendtree to set a colour field to specific colours from 3 different inputs (R/G/B), even if it is just a singular colour entry. I personally use this to control the overall tint of my avatar so it blends into worlds better. Unlike normal shader lighting, it adapts properly to different areas of the world and dynamic elements of the world. It works best when blended with shader based ambient lighting.
+I do not provide some kind of auto-installer prefab for this since there isnt really an easy way to apply something like this on any avatar. Both avatars themselves and the usecase for something like this has too much variance. You can download the example avatar to see **one** usecase for a system like this. It is up to you to utilize the values in a more meaningful way on your own avatar, avatar/unity competence is needed. An example usecase would be animating the colour property of a shader. You can individually keyframe the R-G-B values as the keyframes are generally split in most shaders. If they arent, you can mix keyframes using a blendtree to set a colour field to specific colours from 3 different inputs (R/G/B), even if it is just a singular colour entry. I personally use this to control the overall tint of my avatar so it blends into worlds better. Unlike normal shader lighting, it adapts properly to different areas of the world and dynamic elements of the world. It works best when blended with shader based ambient lighting.
+
+### Example Avatar (Unity package available in releases):
+
+https://vrchat.com/home/avatar/avtr_62d7597d-4d95-49a1-afc7-97a8ebb71f84
 
 ## Configuration
 
