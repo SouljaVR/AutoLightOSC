@@ -111,16 +111,21 @@ struct AppState {
     AppState() {
         windowManager = std::make_unique<WindowManager>();
         screenCapture = std::make_unique<ScreenCapture>();
+
+        // Load settings
+        settings = UserSettings::Load();
+
         colorProcessor = std::make_unique<ColorProcessor>(settings);
+
+        // Create OSC Manager
         oscManager = std::make_unique<OscManager>("127.0.0.1", settings.oscPort);
         oscManager->SetParameters(
             settings.oscRParameter,
             settings.oscGParameter,
             settings.oscBParameter
         );
-        spoutReceiver = std::make_unique<SpoutReceiver>();
 
-        settings = UserSettings::Load();
+        spoutReceiver = std::make_unique<SpoutReceiver>();
 
         // Set intervals based on settings
         captureInterval = std::chrono::milliseconds(1000 / settings.captureFps);
@@ -193,7 +198,14 @@ struct AppState {
         // Set up capture interval based on FPS
         captureInterval = std::chrono::milliseconds(1000 / settings.captureFps);
 
-        // Set up OSC rate
+        // Failsafe, read and apply OSC config before starting capture
+        oscManager->SetOscPort(settings.oscPort);
+        oscManager->SetParameters(
+            settings.oscRParameter,
+            settings.oscGParameter,
+            settings.oscBParameter
+        );
+
         oscManager->SetOscRate(settings.oscRate);
         oscInterval = std::chrono::milliseconds(1000 / settings.oscRate);
 
