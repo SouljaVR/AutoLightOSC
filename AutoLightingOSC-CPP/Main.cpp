@@ -103,7 +103,7 @@ struct AppState {
 
     // Links
     const char* appVersion = "1.0.5";
-    const char* gitHubUrl = "https://github.com/SouljaVR/AutoLightingOSC";
+    const char* gitHubUrl = "https://github.com/SouljaVR/AutoLightOSC";
     const char* websiteUrl = "https://www.soulja.io";
     const char* paypalUrl = "https://www.paypal.com/paypalme/souljaindustries";
     const char* kofiUrl = "https://ko-fi.com/bigsoulja";
