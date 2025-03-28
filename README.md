@@ -111,8 +111,10 @@ the Free Software Foundation, either version 3 of the License, or
 
 This project is open source, but continued development and maintenance benefit from your support.
 
-- Discord: @bigsoulja
-- Website: [www.soulja.io](https://www.soulja.io)
-- GitHub: [SouljaVR/AutoLightOSC](https://github.com/SouljaVR/AutoLightOSC)
+- Discord: @bigsoulja | bigsoulja#8888
+- Website: https://www.soulja.io
+- GitHub: https://github.com/SouljaVR/AutoLightOSC
+- PayPal.Me: https://www.paypal.com/paypalme/souljaindustries
+- Ko-Fi: https://ko-fi.com/bigsoulja
 
-Businesses and collaborators: support via funding, sponsoring, or integration opportunities is welcome.
+Support via funding, sponsoring, or integration opportunities is welcome. Ya boy need to eat.
