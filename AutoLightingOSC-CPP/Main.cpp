@@ -216,7 +216,7 @@ struct AppState {
                 FindTargetWindow();
                 if (!targetWindowHandle) {
                     // Show error message
-                    MessageBoxA(nullptr, "Could not find VRChat window. Please make sure VRChat is running.",
+                    MessageBoxA(nullptr, "Could not find VRChat window. Please make sure VRChat is running, or select another target application in the options.",
                         "Error", MB_OK | MB_ICONERROR);
                     return;
                 }
@@ -1312,7 +1312,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
                     if (aspectRatio > availRegion.x / availRegion.y) {
                         // Width is the limiting factor
-                        imageSize.x = availRegion.x;
+                        imageSize.x = availRegion.x * 0.985f; // Right padding
                         imageSize.y = imageSize.x / aspectRatio;
                     }
                     else {

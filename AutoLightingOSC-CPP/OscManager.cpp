@@ -23,6 +23,8 @@
 
 #include "OscManager.h"
 #include <iostream>
+#include <iomanip>
+#include <sstream>
 
 #define OSC_BUFFER_SIZE 1024
 
@@ -74,26 +76,22 @@ void OscManager::SendColorValues(float r, float g, float b) {
         if (!socket) return;
     }
 
-    // Rate limit check
-    if (oscRate > 0) {
-        auto now = std::chrono::steady_clock::now();
-        auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastMessageTime);
-        double minimumInterval = 1000.0 / oscRate; // in milliseconds
-
-        // If not enough time has passed, discard this message
-        if (elapsed.count() < minimumInterval) {
-            return;
-        }
-
-        // Update the last message time
-        lastMessageTime = now;
-    }
-
     try {
         // Map values from [0,1] to [-1,1] for OSC
         float rMapped = r * 2.0f - 1.0f;
         float gMapped = g * 2.0f - 1.0f;
         float bMapped = b * 2.0f - 1.0f;
+
+        // Set precision to 3 decimal places
+        auto capToThreeDecimals = [](float value) {
+            std::ostringstream out;
+            out << std::fixed << std::setprecision(3) << value;
+            return std::stof(out.str());
+        };
+
+        rMapped = capToThreeDecimals(rMapped);
+        gMapped = capToThreeDecimals(gMapped);
+        bMapped = capToThreeDecimals(bMapped);
 
         // Create and send OSC messages
         char buffer[OSC_BUFFER_SIZE];
