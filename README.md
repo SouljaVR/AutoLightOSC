@@ -35,7 +35,7 @@ AutoLightOSC is a Windows application that captures screen colors and sends them
 
 ### Quick Start
 
-1. Launch AutoLightOSC
+1. Launch AutoLightOSC. You may need to run AutoLightOSC as admin if the capture appears black)
 2. The app will automatically try to detect VRChat
 3. Click "Start Capture"
 
