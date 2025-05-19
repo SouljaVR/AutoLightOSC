@@ -250,30 +250,6 @@ struct AppState {
                 // Initialize Windows Graphics Capture
                 windowsGraphicsCapture->SetDevice(g_pd3dDevice, g_pd3dDeviceContext);
                 windowsGraphicsCapture->StartCaptureWindow(targetWindowHandle);
-
-                // Check if the current process has admin privileges
-                BOOL isAdmin = FALSE;
-                HANDLE hToken = NULL;
-                if (OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken)) {
-                    TOKEN_ELEVATION elevation;
-                    DWORD size = sizeof(TOKEN_ELEVATION);
-                    if (GetTokenInformation(hToken, TokenElevation, &elevation, sizeof(elevation), &size)) {
-                        isAdmin = elevation.TokenIsElevated;
-                    }
-                    CloseHandle(hToken);
-                }
-
-                if (!isAdmin) {
-                    // Show a warning only once per session
-                    static bool warningShown = false;
-                    if (!warningShown) {
-                        MessageBoxA(nullptr,
-                            "Windows Capture mode may require administrator privileges.\n\n"
-                            "If capture appears black, try running the application as administrator.",
-                            "Warning", MB_OK | MB_ICONINFORMATION);
-                        warningShown = true;
-                    }
-                }
             }
 
             isCapturing = true;
