@@ -72,6 +72,15 @@
     <ClInclude Include="stb_image\include\stb_image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="WindowsGraphicsCapture.h">
+      <Filter>AutoLightHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorProcessor.h">
+      <Filter>AutoLightHeaders</Filter>
+    </ClInclude>
+    <ClInclude Include="ScreenCapture.h">
+      <Filter>AutoLightHeaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -95,11 +104,8 @@
     <ClCompile Include="SpoutReceiver.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ColorProcessor.h">
-      <Filter>AutoLightHeaders</Filter>
-    </ClCompile>
-    <ClCompile Include="ScreenCapture.h">
-      <Filter>AutoLightHeaders</Filter>
+    <ClCompile Include="WindowsGraphicsCapture.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

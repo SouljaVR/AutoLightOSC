@@ -164,14 +164,18 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ColorProcessor.cpp" />
-    <ClCompile Include="ColorProcessor.h" />
+    <ClInclude Include="ColorProcessor.h" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="OscManager.cpp" />
     <ClCompile Include="ScreenCapture.cpp" />
-    <ClCompile Include="ScreenCapture.h" />
+    <ClInclude Include="ScreenCapture.h" />
     <ClCompile Include="SpoutReceiver.cpp" />
     <ClCompile Include="UserSettings.cpp" />
     <ClCompile Include="WindowManager.cpp" />
+    <ClCompile Include="WindowsGraphicsCapture.cpp" />
+    <ClInclude Include="WindowsGraphicsCapture.h">
+      <FileType>CppCode</FileType>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="AutoLightingOSC-CPP.rc" />

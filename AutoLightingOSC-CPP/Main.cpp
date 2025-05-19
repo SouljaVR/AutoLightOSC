@@ -42,6 +42,7 @@
 #include "ColorProcessor.h"
 #include "OscManager.h"
 #include "SpoutReceiver.h"
+#include "WindowsGraphicsCapture.h"
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -63,6 +64,7 @@ LRESULT WINAPI WndProc(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 // Application state
 struct AppState {
     UserSettings settings;
+    std::unique_ptr<WindowsGraphicsCapture> windowsGraphicsCapture;
     std::unique_ptr<WindowManager> windowManager;
     std::unique_ptr<ScreenCapture> screenCapture;
     std::unique_ptr<ColorProcessor> colorProcessor;
@@ -97,6 +99,10 @@ struct AppState {
     ID3D11ShaderResourceView* previewTexture = nullptr;
     Bitmap lastCapturedImage;
 
+    // Auto Capture
+    bool vrchatWasDetected = false;
+    bool userManuallyStopped = false;
+
     // About window
     bool showAboutWindow = false;
     ID3D11ShaderResourceView* logoTexture = nullptr;
@@ -111,6 +117,7 @@ struct AppState {
     AppState() {
         windowManager = std::make_unique<WindowManager>();
         screenCapture = std::make_unique<ScreenCapture>();
+        windowsGraphicsCapture = std::make_unique<WindowsGraphicsCapture>();
 
         // Load settings
         settings = UserSettings::Load();
@@ -234,25 +241,69 @@ struct AppState {
                 }
             }
 
-            // Start capture
+            // Start capture with appropriate method
             if (settings.keepTargetWindowOnTop) {
                 windowManager->SetWindowOnTop(targetWindowHandle);
             }
+
+            if (!settings.useDXGI) {
+                // Initialize Windows Graphics Capture
+                windowsGraphicsCapture->SetDevice(g_pd3dDevice, g_pd3dDeviceContext);
+                windowsGraphicsCapture->StartCaptureWindow(targetWindowHandle);
+
+                // Check if the current process has admin privileges
+                BOOL isAdmin = FALSE;
+                HANDLE hToken = NULL;
+                if (OpenProcessToken(GetCurrentProcess(), TOKEN_QUERY, &hToken)) {
+                    TOKEN_ELEVATION elevation;
+                    DWORD size = sizeof(TOKEN_ELEVATION);
+                    if (GetTokenInformation(hToken, TokenElevation, &elevation, sizeof(elevation), &size)) {
+                        isAdmin = elevation.TokenIsElevated;
+                    }
+                    CloseHandle(hToken);
+                }
+
+                if (!isAdmin) {
+                    // Show a warning only once per session
+                    static bool warningShown = false;
+                    if (!warningShown) {
+                        MessageBoxA(nullptr,
+                            "Windows Capture mode may require administrator privileges.\n\n"
+                            "If capture appears black, try running the application as administrator.",
+                            "Warning", MB_OK | MB_ICONINFORMATION);
+                        warningShown = true;
+                    }
+                }
+            }
+
             isCapturing = true;
         }
-
+        userManuallyStopped = false;
         lastFrameTime = std::chrono::steady_clock::now();
         lastSmoothingTime = std::chrono::steady_clock::now();
     }
 
     void StopCapture() {
+        // Set flag to indicate manual stop if this is during active VRChat session
+        if (isCapturing && windowManager->FindVRChatWindow() != nullptr && settings.autoCapture) {
+            userManuallyStopped = true;
+        }
         // If using Spout, disconnect from sender
         if (settings.enableSpout) {
             spoutReceiver->Disconnect();
         }
-        else if (targetWindowHandle) {
-            // Normal screen capture - restore window state
-            windowManager->SetWindowNotTopMost(targetWindowHandle);
+        else {
+            // Not using Spout
+
+            // Stop Windows Graphics Capture if that's what we're using
+            if (!settings.useDXGI) {
+                windowsGraphicsCapture->StopCapture();
+            }
+
+            // Restore window state if we have a target window
+            if (targetWindowHandle) {
+                windowManager->SetWindowNotTopMost(targetWindowHandle);
+            }
         }
 
         isCapturing = false;
@@ -300,11 +351,20 @@ struct AppState {
             // Update the capture area each time to follow the window
             captureArea = windowManager->GetOptimalCaptureArea(targetWindowHandle);
 
-            // Get the full capture area
-            RECT fullCaptureArea = captureArea;
+            if (settings.useDXGI) {
+                // Use DXGI capture
+                capturedBitmap = screenCapture->Capture(captureArea);
+            }
+            else {
+                // Use Windows Capture API
+                if (!windowsGraphicsCapture->GetCaptureWindow() ||
+                    windowsGraphicsCapture->GetCaptureWindow() != targetWindowHandle) {
+                    windowsGraphicsCapture->SetDevice(g_pd3dDevice, g_pd3dDeviceContext);
+                    windowsGraphicsCapture->StartCaptureWindow(targetWindowHandle);
+                }
+                capturedBitmap = windowsGraphicsCapture->Capture(captureArea);
+            }
 
-            // Capture the screen area
-            capturedBitmap = screenCapture->Capture(fullCaptureArea);
             if (!capturedBitmap.IsValid()) {
                 return;
             }
@@ -625,6 +685,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
 
     // Main loop
     bool done = false;
+    auto lastUIFrame = std::chrono::steady_clock::now();
     while (!done)
     {
         // Poll and handle messages (inputs, window resize, etc.)
@@ -645,6 +706,51 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
         auto windowCheckDuration = std::chrono::duration_cast<std::chrono::milliseconds>(currentTime - lastWindowCheckTime);
 
         if (windowCheckDuration.count() >= 2000) { // 2 seconds
+            // Determine if VRChat is running by checking for its window
+            HWND vrchatWindow = appState->windowManager->FindVRChatWindow();
+            bool vrchatDetected = (vrchatWindow != nullptr);
+
+            // Handle auto-capture logic when enabled
+            if (appState->settings.autoCapture) {
+                // VRChat just appeared (wasn't detected before but is now)
+                if (vrchatDetected && !appState->vrchatWasDetected) {
+                    // Reset manual stop flag when VRChat is freshly launched
+                    appState->userManuallyStopped = false;
+                }
+
+                // VRChat just disappeared (was detected before but isn't now)
+                if (!vrchatDetected && appState->vrchatWasDetected) {
+                    // Auto-stop capture if VRChat closed
+                    if (appState->isCapturing) {
+                        appState->StopCapture();
+                        appState->targetWindowHandle = nullptr;
+                    }
+                }
+
+                // Auto-start capture if: VRChat is running AND we're not capturing AND user didn't manually stop
+                if (vrchatDetected && !appState->isCapturing && !appState->userManuallyStopped) {
+                    // Set target window to VRChat
+                    appState->targetWindowHandle = vrchatWindow;
+                    appState->captureArea = appState->windowManager->GetOptimalCaptureArea(vrchatWindow);
+
+                    // Update the selected index in dropdown
+                    appState->RefreshApplicationList();
+                    for (size_t i = 0; i < appState->windowList.size(); i++) {
+                        if (appState->windowList[i].handle == vrchatWindow) {
+                            appState->selectedWindowIdx = static_cast<int>(i);
+                            break;
+                        }
+                    }
+
+                    // Start the capture
+                    appState->StartCapture();
+                }
+            }
+
+            // Save current VRChat state for next check
+            appState->vrchatWasDetected = vrchatDetected;
+
+            // Now continue with the original window checking code
             if (appState->isCapturing) {
                 // Check if the window is still valid
                 if (!appState->windowManager->IsWindowValid(appState->targetWindowHandle)) {
@@ -680,7 +786,7 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
                     }
                 }
             }
-            else {
+            else if (!appState->settings.autoCapture) { // Only do this if auto-capture is off
                 // Not capturing, check if our existing handle is still valid
                 if (appState->targetWindowHandle && !appState->windowManager->IsWindowValid(appState->targetWindowHandle)) {
                     appState->targetWindowHandle = nullptr;
@@ -733,6 +839,23 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
                 appState->ProcessOscOutput();
                 lastOscTime = currentTime;
             }
+        }
+
+        // If the window is minimized, skip ALL ImGui/D3D rendering
+        if (IsIconic(hwnd)) {
+            Sleep(100);                  // sleep a bit to avoid a tight spin
+            continue;
+        }
+
+        // Throttle to 60 FPS max
+        {
+            auto now = std::chrono::steady_clock::now();
+            auto delta = std::chrono::duration_cast<std::chrono::milliseconds>(now - lastUIFrame);
+            if (delta.count() < 16) {
+                Sleep(1);
+                continue;
+            }
+            lastUIFrame = now;
         }
 
         // Start the Dear ImGui frame
@@ -826,6 +949,53 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
                     appState->settings.enableSpout = enableSpout;
                     appState->SaveSettings();
                 }
+            }
+
+            ImGui::SameLine();
+            ImGui::SetCursorPosX(125); // Optional: set specific X position for alignment
+
+            // Use DXGI Toggle
+            if (appState->isCapturing) {
+                // When capturing, show a disabled checkbox
+                bool useDXGI = appState->settings.useDXGI;
+                ImGui::BeginDisabled();
+                ImGui::Checkbox("Use DXGI", &useDXGI);
+                ImGui::EndDisabled();
+
+                if (ImGui::IsItemHovered()) {
+                    ImGui::SetTooltip("Cannot change capture method during capture");
+                }
+            }
+            else {
+                // When not capturing, show an enabled checkbox
+                bool useDXGI = appState->settings.useDXGI;
+                if (ImGui::Checkbox("Use DXGI", &useDXGI)) {
+                    appState->settings.useDXGI = useDXGI;
+                    appState->SaveSettings();
+                }
+
+                if (ImGui::IsItemHovered()) {
+                    ImGui::SetTooltip(
+                        "When disabled, uses Windows Capture API for better performance with small windows.\n"
+                        "Note: May require administrator privileges for some applications.");
+                }
+            }
+
+            ImGui::SameLine();
+            ImGui::SetCursorPosX(215); // Adjust position as needed
+
+            // Auto Capture VRChat toggle
+            bool autoCapture = appState->settings.autoCapture;
+            if (ImGui::Checkbox("Auto Capture VRChat", &autoCapture)) {
+                appState->settings.autoCapture = autoCapture;
+                appState->userManuallyStopped = false; // Reset the flag when toggling
+                appState->SaveSettings();
+            }
+
+            if (ImGui::IsItemHovered()) {
+                ImGui::SetTooltip(
+                    "Automatically starts/stops capture when VRChat is detected.\n"
+                    "If you manually stop capture, it won't auto-start until VRChat is closed and reopened.");
             }
 
             // White Mix slider
@@ -1531,7 +1701,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
                 ImGui::Spacing();
                 ImGui::Spacing();
 
-                // License or additional information
                 ImGui::Text("This software is licensed under the MIT License.");
 
                 // Close button at the bottom
@@ -1545,14 +1714,18 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
             }
         }
 
-        // Rendering
         ImGui::Render();
-        const float clear_color_with_alpha[4] = { clear_color.x * clear_color.w, clear_color.y * clear_color.w, clear_color.z * clear_color.w, clear_color.w };
+        const float clear_color_with_alpha[4] = {
+            clear_color.x * clear_color.w,
+            clear_color.y * clear_color.w,
+            clear_color.z * clear_color.w,
+            clear_color.w
+        };
         g_pd3dDeviceContext->OMSetRenderTargets(1, &g_mainRenderTargetView, nullptr);
         g_pd3dDeviceContext->ClearRenderTargetView(g_mainRenderTargetView, clear_color_with_alpha);
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
 
-        g_pSwapChain->Present(1, 0); // Present with vsync
+        g_pSwapChain->Present(1, 0); // vsync
     }
 
     // Save settings before exit

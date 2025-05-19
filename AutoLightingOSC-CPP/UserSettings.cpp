@@ -59,6 +59,8 @@ UserSettings UserSettings::Load() {
                 file >> j;
 
                 // Load values from JSON
+                if (j.contains("useDXGI")) settings.useDXGI = j["useDXGI"];
+                if (j.contains("autoCapture")) settings.autoCapture = j["autoCapture"];
                 if (j.contains("captureFps")) settings.captureFps = j["captureFps"];
                 if (j.contains("whiteMixValue")) settings.whiteMixValue = j["whiteMixValue"];
                 if (j.contains("saturationValue")) settings.saturationValue = j["saturationValue"];
@@ -96,6 +98,8 @@ void UserSettings::Save() const {
 
         // Create JSON object
         nlohmann::json j;
+        j["useDXGI"] = useDXGI;
+        j["autoCapture"] = autoCapture;
         j["captureFps"] = captureFps;
         j["whiteMixValue"] = whiteMixValue;
         j["saturationValue"] = saturationValue;

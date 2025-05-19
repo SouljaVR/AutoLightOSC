@@ -8,6 +8,8 @@
 class UserSettings {
 public:
     // Default settings
+    bool useDXGI = false;
+    bool autoCapture = false;
     int captureFps = 5;
     int whiteMixValue = 0;
     int saturationValue = 0;
