@@ -108,7 +108,7 @@ struct AppState {
     ID3D11ShaderResourceView* logoTexture = nullptr;
 
     // Links
-    const char* appVersion = "1.0.5";
+    const char* appVersion = "1.0.7";
     const char* gitHubUrl = "https://github.com/SouljaVR/AutoLightOSC";
     const char* websiteUrl = "https://www.soulja.io";
     const char* paypalUrl = "https://www.paypal.com/paypalme/souljaindustries";
@@ -580,6 +580,65 @@ struct AppState {
     }
 };
 
+bool LoadTextureFromResource(HINSTANCE hInstance, int resourceId,
+    ID3D11ShaderResourceView** out_srv,
+    int& out_width, int& out_height)
+{
+    // 1) Locate the RCDATA blob
+    HRSRC hRes = FindResource(hInstance, MAKEINTRESOURCE(resourceId), RT_RCDATA);
+    if (!hRes) return false;
+    HGLOBAL hMem = LoadResource(hInstance, hRes);
+    if (!hMem) return false;
+    void* pData = LockResource(hMem);
+    DWORD size = SizeofResource(hInstance, hRes);
+
+    // 2) Decode PNG in-memory
+    int w, h, channels;
+    unsigned char* image_data = stbi_load_from_memory(
+        (unsigned char*)pData, size, &w, &h, &channels, 4
+    );
+    if (!image_data) return false;
+
+    // 3) Create D3D11 texture
+    D3D11_TEXTURE2D_DESC desc = {};
+    desc.Width = w;
+    desc.Height = h;
+    desc.MipLevels = 1;
+    desc.ArraySize = 1;
+    desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+    desc.SampleDesc.Count = 1;
+    desc.Usage = D3D11_USAGE_DEFAULT;
+    desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
+
+    D3D11_SUBRESOURCE_DATA sub = {};
+    sub.pSysMem = image_data;
+    sub.SysMemPitch = w * 4;
+
+    ID3D11Texture2D* tex = nullptr;
+    if (FAILED(g_pd3dDevice->CreateTexture2D(&desc, &sub, &tex))) {
+        stbi_image_free(image_data);
+        return false;
+    }
+
+    // 4) Create SRV
+    D3D11_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+    srvDesc.Format = desc.Format;
+    srvDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
+    srvDesc.Texture2D.MipLevels = 1;
+    srvDesc.Texture2D.MostDetailedMip = 0;
+    if (FAILED(g_pd3dDevice->CreateShaderResourceView(tex, &srvDesc, out_srv))) {
+        tex->Release();
+        stbi_image_free(image_data);
+        return false;
+    }
+
+    tex->Release();
+    stbi_image_free(image_data);
+    out_width = w;
+    out_height = h;
+    return true;
+}
+
 // Main code
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nShowCmd)
 {
@@ -662,7 +721,9 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _
     appState->FindTargetWindow();
 
     int logoWidth, logoHeight;
-    if (LoadTextureFromFile("resources/logo.png", &appState->logoTexture, logoWidth, logoHeight)) {
+    if (LoadTextureFromResource(hInstance, IDR_PNG_LOGO,
+        &appState->logoTexture,
+        logoWidth, logoHeight)) {
     }
 
     // Set window size based on debug view

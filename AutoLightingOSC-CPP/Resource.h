@@ -12,6 +12,7 @@
 #define IDI_AUTOLIGHTINGOSCCPP			107
 #define IDI_SMALL				108
 #define IDC_AUTOLIGHTINGOSCCPP			109
+#define IDR_PNG_LOGO                  129
 #define IDC_MYICON				2
 #ifndef IDC_STATIC
 #define IDC_STATIC				-1
