@@ -24,7 +24,7 @@ AutoLightOSC is a Windows application that captures screen colors and sends them
 - Windows 10/11
 - DirectX 11 capable GPU (If you can play VRChat you are probably fine)
 - VRChat with OSC enabled
-- Unity/Avatar Creation/OSC integration competence, I do not provide a prefab for this.
+- Unity/Avatar Creation/OSC integration competence, I do not provide a prefab for this. However there is a demo avatar available.
 
 ## Installation
 
@@ -35,7 +35,7 @@ AutoLightOSC is a Windows application that captures screen colors and sends them
 
 ### Quick Start
 
-1. Launch AutoLightOSC
+1. Launch AutoLightOSC. *You may need to run AutoLightOSC as admin if the capture appears black)*
 2. The app will automatically try to detect VRChat
 3. Click "Start Capture"
 
@@ -45,7 +45,7 @@ AutoLightOSC is a Windows application that captures screen colors and sends them
 - **OSC Rate:** How many OSC messages to send per second (1-240).
 - **FPS:** Screen capture rate (1-60) - Recommended is something really low like 5fps, but if you want the lighting to be low latency you can put it higher. *VRChat floats update at around 10hz so there isnt much benefit going over 5fps + smoothing.*
 - **Use Spout2:** Enable to receive frames from Spout2 senders instead of screen capture.
-- **White Mix:** Blend the captured color with white (0-100%) - basically the same as lowering saturation, this setting is pretty redundant but I left it there anyway in case it has a usecase I havent thought of lol.
+- **White Mix:** Blend the captured color with white (0-100%). Can be used in tandem with positive saturation for more reliable colours without being heavily-saturated overall.
 - **Saturation Boost:** Adjust color saturation (-100% to +100%).
 - **Force Max Brightness:** Always use the brightest possible version of the current color, recommended to keep this on if you want your avatar to have the highest influence possible by this system.
 - **Enable Smoothing:** Smooth color transitions, recommended to keep on so the colour changes are gradual on the avatar. If you use avatar parameter smoothing for the feature you are controlling with this, this is not needed. Smoothing is fixed to 60fps, independent of the capture FPS, and it influences the OSC output rate. Keep this in mind and ensure the OSC rate is set to something sensible so you arent overloading VRChat with a crazy high send rate. 3 parameters send each poll, so the rate is 3x whatever it says. E.g an OSC rate of 3 is 9 messages per second. 
@@ -63,6 +63,8 @@ Click "Show Options" to access:
 
 ## Avatar Setup
 
+![image](https://github.com/SouljaVR/AutoLightOSC/blob/master/demo2.gif?raw=true)
+
 For your VRChat avatar to respond to AutoLightOSC, it needs to:
 
 1. Have 3 float parameters, each float representing each colour channel. You can use any parameter names, its customizable.
@@ -76,7 +78,11 @@ AL_Green: -1.0
 AL_Blue: -1.0
 ```
 
-I do not provide a prefab for this. It is up to you to utilize the values, avatar/unity competence is needed. An example usecase would be animating the colour property of a shader. You can individually keyframe the R-G-B values as the keyframes are generally split in most shaders. If they arent, you can mix keyframes using a blendtree to set a colour field to specific colours from 3 different inputs (R/G/B), even if it is just a singular colour entry. I personally use this to control the overall tint of my avatar so it blends into worlds better. Unlike normal shader lighting, it adapts properly to different areas of the world and dynamic elements of the world. It works best when blended with shader based ambient lighting.
+I do not provide some kind of auto-installer prefab for this since there isnt really an easy way to apply something like this on any avatar. Both avatars themselves and the usecase for something like this has too much variance. You can download the example avatar to see **one** usecase for a system like this. It is up to you to utilize the values in a more meaningful way on your own avatar, avatar/unity competence is needed. An example usecase would be animating the colour property of a shader. You can individually keyframe the R-G-B values as the keyframes are generally split in most shaders. If they arent, you can mix keyframes using a blendtree to set a colour field to specific colours from 3 different inputs (R/G/B), even if it is just a singular colour entry. I personally use this to control the overall tint of my avatar so it blends into worlds better. Unlike normal shader lighting, it adapts properly to different areas of the world and dynamic elements of the world. It works best when blended with shader based ambient lighting.
+
+### Example Avatar (Unity package available in releases):
+
+https://vrchat.com/home/avatar/avtr_62d7597d-4d95-49a1-afc7-97a8ebb71f84
 
 ## Configuration
 
@@ -105,8 +111,12 @@ the Free Software Foundation, either version 3 of the License, or
 
 This project is open source, but continued development and maintenance benefit from your support.
 
-- Discord: @bigsoulja
-- Website: [www.soulja.io](https://www.soulja.io)
-- GitHub: [SouljaVR/AutoLightOSC](https://github.com/SouljaVR/AutoLightOSC)
+- Discord: @bigsoulja | bigsoulja#8888
+- Website: https://www.soulja.io
+- GitHub: https://github.com/SouljaVR/AutoLightOSC
+- PayPal.Me: https://www.paypal.com/paypalme/souljaindustries
+- Ko-Fi: https://ko-fi.com/bigsoulja
 
-Businesses and collaborators: support via funding, sponsoring, or integration opportunities is welcome.
+Support via funding, sponsoring, or integration opportunities is welcome. Ya boy need to eat.
+
+Don't forget to leave a ⭐ if this helped you in any way! Thank you.
